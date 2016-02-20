@@ -1,7 +1,7 @@
 {
-  "name": "tree",
+  "name": "tree-client",
   "version": "1.0.0",
-  "description": "",
+  "description": "A new way to see tasklists",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,5 +15,14 @@
   "bugs": {
     "url": "https://github.com/RZEROSTERN/loschingones/issues"
   },
-  "homepage": "https://github.com/RZEROSTERN/loschingones#readme"
+  "homepage": "https://github.com/RZEROSTERN/loschingones#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-browserify": "^0.5.1",
+    "gulp-sass": "^2.2.0"
+  },
+  "dependencies": {
+    "backbone": "^1.2.3",
+    "backbone.marionette": "^2.4.4"
+  }
 }

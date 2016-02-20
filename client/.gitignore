@@ -1,2 +1,8 @@
 # npm modules
 node_modules/
+
+# built files
+www/
+
+# env specific
+src/app/config/index.js
