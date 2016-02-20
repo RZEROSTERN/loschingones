@@ -1,6 +1,6 @@
 var Service = require('backbone.service'),
     md5 = require('md5'),
-    now = require('../utils').now;
+    now = require('../../utils').now;
 
 var SessionService = Service.extend({
     start: function () {
@@ -22,6 +22,10 @@ var SessionService = Service.extend({
     newSession: function () {
         this.uid = md5(navigator.userAgent + now());
         this.data = {};
+    },
+
+    getUid: function () {
+        return this.uid;
     },
     
     set: function (key, data) {

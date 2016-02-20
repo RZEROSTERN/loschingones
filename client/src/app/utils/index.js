@@ -3,7 +3,7 @@ module.exports = {
         if (Date.now) {
             return Date.now();
         } else {
-            return new Date().getTime():
+            return new Date().getTime();
         }
     }
 };
