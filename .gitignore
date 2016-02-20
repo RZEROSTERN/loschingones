@@ -1,0 +1,4 @@
+# Global gitignore
+
+# logs
+**/log/
