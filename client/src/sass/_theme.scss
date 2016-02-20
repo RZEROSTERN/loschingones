@@ -1,7 +1,309 @@
 @import '_variables';
 
-body {
-    font-family: $fonts;
-    background-color: $color-background;
-    color: $color-text;
+html, body {
+  font-family: $font-stack;
+  background-color: $color-background;
+  color: $color-text;
+}
+
+a {
+  color: $color-primary;
+  text-decoration: none;
+}
+a:hover {
+  color: $color-secondary;
+}
+
+p {
+  margin-bottom: 1em;
+  line-height: 1.3;
+}
+
+p.align-justify {
+  text-align: justify;
+}
+p.align-left {
+  text-align: left;
+}
+p.align-right {
+  text-align: right;
+}
+p.align-center {
+  text-align: center;
+}
+
+img.rounded {
+  border-radius: 1em;
+  display: block;
+  margin: 0.5em;
+}
+
+figure {
+  padding: 0.5em;
+  margin: 0.3em;
+}
+figure.left, figure.right {
+  border: 1px solid $color-tertiary;
+}
+figure.left {
+  margin-right: 0.5em;
+}
+figure.right {
+  margin-left: 0.5em;
+}
+figure > img {
+  display: block;
+  margin: 0px auto;
+}
+figure > figcaption {
+  margin: 0.5em 0em;
+  text-align: center;
+}
+
+ul {
+  list-style: square;
+  padding-left: 1.5em;
+}
+ol {
+  list-style: lower-alpha;
+  padding-left: 1.5em;
+}
+ul li, ol li {
+  margin-bottom: 0.8em;
+  vertical-align: top;
+}
+ul.list-cols-2, ol.list-cols-2 {
+  padding: 0px;
+  li {
+    width: 44%;
+    margin-right: 5%;
+    display: inline-block;
+  }
+}
+ul.list-cols-3, ol.list-cols-3 {
+  padding: 0px;
+  li {
+    width: 27%;
+    margin-right: 5%;
+    display: inline-block;
+  }
+}
+
+dl dt {
+  font-weight: bold;
+  margin-bottom: 0.3em;
+}
+dl dd {
+  margin-bottom: 0.8em;
+  margin-left: 1em;
+}
+
+address {
+  font-style: italic;
+}
+
+abbr {
+  border-bottom: 1px dotted $color-dark;
+  cursor: pointer;
+}
+
+q {
+  font-style: italic;
+}
+q:before {
+  content: '“';
+}
+q:after {
+  content: '”';
+}
+
+cite {
+  font-style: italic;
+}
+
+code {
+  font-family: monospace;
+  word-spacing: pre;
+  word-wrap: break-word;
+  background-color: $color-dark;
+  color: $color-clear;
+  padding: 0.2em 0.4em 0.1em 0.4em;
+  margin-right: 0.3em;
+}
+
+em {
+  font-style: italic;
+}
+
+kbd {
+  font-family: monospace;
+  word-spacing: pre;
+  word-wrap: break-word;
+  background-color: $color-dark;
+  color: $color-tertiary;
+  padding: 0.2em 0.4em 0.1em 0.4em;
+  margin-right: 0.3em;
+  border-radius: 0.5em;
+}
+
+pre {
+  font-family: monospace;
+  word-spacing: pre;
+  word-wrap: break-word;
+}
+
+blockquote {
+  border-left: 3px solid $color-primary;
+  padding: 1em;
+  margin-bottom: 1em;
+  position: relative;
+}
+blockquote > footer {
+  font-style: italic;
+  text-align: right;
+}
+
+del, strike {
+  text-decoration: line-through;
+}
+
+strong {
+  font-weight: bold;
+  line-height: 1.5;
+}
+
+sub, sup {
+  font-size: 0.7em;
+}
+
+sub {
+  vertical-align: sub;
+}
+sup {
+  vertical-align: super;
+}
+
+hr {
+  border: 0px;
+  border-top: 1px solid $color-primary;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 0.5em;
+  padding-bottom: 0.3em;
+}
+
+h1 {
+  font-size: 2.3em;
+  border-bottom: 2px solid $color-primary;
+}
+
+h2 {
+  font-size: 2em;
+  border-bottom: 2px solid $color-primary;
+}
+h3 {
+  font-size: 1.9em;
+  border-bottom: 2px solid $color-primary;
+}
+h4 {
+  font-size: 1.7em;
+}
+h5 {
+  font-size: 1.5em;
+}
+h6 {
+  font-size: 1.3em;
+}
+
+input[type="text"], input[type="email"], input[type="number"], input[type="search"], input[type="tel"], input[type="url"], input[type="password"], textarea, select, label {
+  height: 1.8em;
+  display: block;
+  width: 96%;
+  padding: 0.3em;
+  font-size: 1em;
+  border: 1px solid $color-dark;
+  border-radius: 0.3em;
+  color: $color-dark;
+  font-family: $font-stack;
+  margin-bottom: 0.5em;
+}
+label {
+  border: 0px;
+  margin-bottom: 0.2em;
+  padding: 0em;
+}
+
+input[type="checkbox"], input[type="radio"] {
+  display: none;
+}
+input[type="checkbox"] + label:before, input[type="radio"] + label:before {
+  content: '';
+  float: left;
+  display: block;
+  margin-top: 0.2em;
+  margin-right: 0.3em;
+  height: 14px;
+  background-position: bottom;
+  background-size: 100% 200%;
+}
+input[type="checkbox"]:checked + label:before, input[type="radio"]:checked + label:before {
+  background-position: top;
+}
+
+/* input[type="checkbox"] + label:before {
+  width: 21px;
+  background-image: url('../imgs/form-checkbox.svg');
+}
+input[type="radio"] + label:before {
+  width: 14px;
+  background-image: url('../imgs/form-radio.svg');
+} */
+
+input[type="checkbox"].ctl-large + label, input[type="radio"].ctl-large + label {
+  font-size: 1.3em;
+}
+
+input[type="checkbox"].ctl-large + label:before, input[type="radio"].ctl-large + label:before {
+  height: 20px;
+  width: 20px;
+}
+input[type="checkbox"].ctl-large + label:before {
+  width: 30px;
+}
+
+input[type="text"]:focus, input[type="password"]:focus, textarea:focus, select:focus {
+  border-color: $color-primary;
+}
+textarea {
+  height: 4.6em;
+  display: block;
+  width: 96%;
+}
+
+input.ctl-large, textarea.ctl-large, select.ctl-large, label.ctl-large {
+  height: 1.9em;
+  font-size: 1.3em;
+}
+textarea.ctl-large {
+  height: 2.6em;
+}
+
+fieldset {
+  border: 1px solid $color-tertiary;
+  border-radius: 0.3em;
+  padding: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+legend {
+  margin: 0.3em;
+  padding: 0 0.2em 0 0.2em;
+  font-weight: bold;
+}
+
+fieldset.ctl-large > legend {
+  font-size: 1.3em;
 }

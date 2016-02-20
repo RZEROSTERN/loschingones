@@ -10,7 +10,7 @@ var SessionService = Service.extend({
     },
     
     requests: {
-        'startSession': 'startSession',
+        'newSession': 'newSession',
         'set': 'set',
         'get': 'get',
         'del': 'del',
@@ -19,7 +19,7 @@ var SessionService = Service.extend({
         'load': 'load'
     },
     
-    startSession: function () {
+    newSession: function () {
         this.uid = md5(navigator.userAgent + now());
         this.data = {};
     },
