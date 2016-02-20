@@ -1,6 +1,7 @@
 var gulp = require('gulp'),
     sass = require('gulp-sass'),
-    browserify = require('gulp-browserify');
+    browserify = require('gulp-browserify'),
+    browserifyHandlebars = require('browserify-handlebars');
 
 /* CONFIG */
 var src = {
@@ -31,7 +32,8 @@ gulp.task('styles', function () {
 gulp.task('scripts', function () {
 	return gulp.src(src.js)
 	.pipe(browserify({
-        insertGlobals: true
+        insertGlobals: true,
+        transform: [browserifyHandlebars]
 	}))
 	.pipe(gulp.dest(dist.js));
 });

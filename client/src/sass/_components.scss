@@ -1,0 +1,14 @@
+@import '_variables';
+
+.header {
+    background-color: $color-dark;
+    color: $color-clear;
+    height: 50px;
+    
+    h1 {
+        height: 50px;
+        line-height: 50px;
+        font-size: 30px;
+        margin-left: 15px;
+    }
+}
