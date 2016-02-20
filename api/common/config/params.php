@@ -5,5 +5,5 @@ return [
     'user.passwordResetTokenExpire' => 3600,
 
     'SERVER_NAME' => 'loschingones',
-    'JWT_ALGORITHM' => 'HS512',
+    'JWT_ALGORITHM' => 'HS256',
 ];

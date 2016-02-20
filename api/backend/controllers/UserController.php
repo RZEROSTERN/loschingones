@@ -63,7 +63,7 @@ class UserController extends Controller
                         $data = [
                             'iat' => $this->issuedAt,
                             'jti' => $this->tokenID,
-                            'iss' => Yii::$app->params->get('SERVER_NAME'),
+                            'iss' => 'loschingones',
                             'nbf' => $this->notBefore,
                             'exp' => $this->expire,
                             'data' => [
@@ -75,7 +75,7 @@ class UserController extends Controller
                         header('Content-type: application/json');
 
                         $this->secretKey = openssl_random_pseudo_bytes(64);
-                        $this->algorithm = Yii::$app->params->get('JWT_ALGORITHM');
+                        $this->algorithm = 'HS256';
 
                         $this->jwt = JWT::encode($data, $this->secretKey, $this->algorithm);
                         $unencodedArray = ['jwt' => $this->jwt];
@@ -91,9 +91,11 @@ class UserController extends Controller
                 }
             } else {
                 header('HTTP/1.0 400 Bad Request');
+                exit();
             }
         } else {
             header('HTTP/1.0 405 Method Not Allowed');
+            exit();
         }
 	}
 }
