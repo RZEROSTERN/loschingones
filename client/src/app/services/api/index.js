@@ -35,7 +35,8 @@ var APIService = Service.extend({
         }
         return $.ajax({
             url: config.apiurl + '/?r=documents/save-data-to-document',
-            type: 'GET',
+            type: 'POST',
+            // data: 'auth=' + token + '&id=' + uid + '&rev=' + rev + '&data=' + JSON.stringify(tree),
             data: {
                 auth: token,
                 id: uid,
