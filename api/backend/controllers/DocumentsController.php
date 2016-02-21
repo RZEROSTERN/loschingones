@@ -11,6 +11,9 @@ namespace backend\controllers;
 use Yii;
 use linslin\yii2\curl\Curl;
 use yii\web\Controller;
+use yii\filters\Cors;
+use yii\helpers\ArrayHelper;
+use yii\web\Request;
 
 class DocumentsController extends Controller {
     public function actions()
