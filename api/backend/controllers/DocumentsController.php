@@ -48,7 +48,15 @@ class DocumentsController extends Controller {
      */
     public function actionNewDocument(){
         $curl = new Curl();
+        $response = $curl->get('http://127.0.0.1:5984/albums');
+        echo $response;
     }
+
+    public function actionGatherExistingDocument() {
+
+    }
+
+    public function
 
     /**
      * TEST METHODS
