@@ -56,8 +56,6 @@ class DocumentsController extends Controller {
 
     }
 
-    public function
-
     /**
      * TEST METHODS
      */
