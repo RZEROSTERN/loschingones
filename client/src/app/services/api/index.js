@@ -19,14 +19,13 @@ var APIService = Service.extend({
             });
         }
         return $.ajax({
-            url: config.apiurl + '/',
-            type: 'GET',
-            data: {},
+            url: config.apiurl + '/?r=documents/new-document&id=' + uid,
+            type: 'POST',
             dataType: 'json'
         });
     },
     
-    saveTree: function (uid, token, tree) {
+    saveTree: function (uid, token, rev, tree) {
         if (config.apiurl === 'mockup') {
             return new Promise(function (resolve, reject) {
                 if (uid === '000000' ) reject('Generic error');
@@ -35,9 +34,14 @@ var APIService = Service.extend({
             });
         }
         return $.ajax({
-            url: config.apiurl + '/',
+            url: config.apiurl + '/?r=documents/save-data-to-document',
             type: 'POST',
-            data: {},
+            data: JSON.stringify({
+                auth: token,
+                id: uid,
+                rev: rev,
+                data: tree
+            }),
             dataType: 'json'
         });
     },

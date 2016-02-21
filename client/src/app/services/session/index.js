@@ -7,6 +7,7 @@ var SessionService = Service.extend({
     start: function () {
         this.uid = null;
         this.token = null;
+        this.rev = null;
         this.data = {};
     },
     
@@ -23,6 +24,7 @@ var SessionService = Service.extend({
     newSession: function () {
         this.uid = md5(navigator.userAgent + now());
         this.data = {};
+        console.log('uid set', this);
         return this.uid;
     },
 
@@ -35,7 +37,7 @@ var SessionService = Service.extend({
     },
     
     get: function (key, defaultValue) {
-        if (this.has(key)) return defaultValue;
+        if (!this.has(key)) return defaultValue;
         return this.data[key];
     },
     
@@ -54,17 +56,19 @@ var SessionService = Service.extend({
     },
     
     canBeSynced: function () {
-        return this.uid !== null && this.token !== null;
+        return this.uid !== null && this.token !== null && this.rev !== null;
     },
     
     save: function () {
         // Sync to server
         if (this.canBeSynced()) {
-            return APIService.request('saveTree', this.uid, this.token, this.get('tree', {}));
+            return APIService.request('saveTree', this.uid, this.token, this.rev, this.get('tree', {}));
         }
+        console.log(this);
         APIService.request('getToken', this.uid).then(function (res) {
-            this.token = res.token;
-            return APIService.request('saveTree', this.uid, this.token, this.get('tree', {}));
+            this.token = res.jwt;
+            this.rev = res.couchrev;
+            return APIService.request('saveTree', this.uid, this.token, this.rev, this.get('tree', {}));
         }.bind(this)).catch(function (err) {
             // Handle error
             console.error('Save:', err);
