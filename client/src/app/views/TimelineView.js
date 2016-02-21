@@ -1,7 +1,14 @@
-var Marionette = require('backbone.marionette');
+var Marionette = require('backbone.marionette'),
+	timelineTemplate = require('../templates/timeline.handlebars');
 
 var TimelineView = Marionette.LayoutView.extend({
-  el: '#main'
+	template: timelineTemplate,
+	regions: {
+    	'tree': '#tree',
+    	'svg': '#svg'
+  	},
+  	onRender: function () {
+  		console.log("HELLO WORLD");
+  	}
 });
-
 module.exports = TimelineView;
