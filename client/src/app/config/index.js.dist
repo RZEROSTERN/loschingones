@@ -1,4 +1,0 @@
-module.exports = {
-  siteurl: '[*siteurl*]',           // Site root URL
-  apiurl: '[*apiurl*]'              // API backend URL
-};

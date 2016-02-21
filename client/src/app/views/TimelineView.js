@@ -1,4 +1,5 @@
 var Marionette = require('backbone.marionette'),
+  TreeLib = require("../lib/tree"),
 	timelineTemplate = require('../templates/timeline.handlebars');
 
 var TimelineView = Marionette.LayoutView.extend({
@@ -9,6 +10,7 @@ var TimelineView = Marionette.LayoutView.extend({
   	},
   	onRender: function () {
   		console.log("HELLO WORLD");
+      TreeLib.start(this.svg.el);
   	}
 });
 module.exports = TimelineView;
