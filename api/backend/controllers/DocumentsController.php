@@ -14,6 +14,7 @@ use yii\web\Controller;
 use yii\filters\Cors;
 use yii\helpers\ArrayHelper;
 use yii\web\Request;
+use Doctrine\CouchDB\CouchDBClient;
 
 class DocumentsController extends Controller {
     public function actions()
@@ -50,13 +51,21 @@ class DocumentsController extends Controller {
      * COUCHDB METHODS
      */
     public function actionNewDocument(){
-        $curl = new Curl();
-        $response = $curl->get('http://127.0.0.1:5984/albums');
-        echo $response;
+        $client = CouchDBClient::create(array('dbname' => 'plantree'));
+
+        $client->getDatabase();
+        $result = $client->postDocument(array('ip' => $_SERVER['REMOTE_ADDR'], 'ts' => time()));
+
+        echo json_encode(array('id' => $result[0], 'rev' => $result[1]));
     }
 
-    public function actionGatherExistingDocument() {
+    public function actionGatherExistingDocument($id) {
+        $client = CouchDBClient::create(array('dbname' => 'plantree'));
 
+        $client->getDatabase();
+        $doc = $client->findDocument($id);
+
+        echo json_encode($doc->body);
     }
 
     /**
