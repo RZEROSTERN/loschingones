@@ -71,7 +71,7 @@ class DocumentsController extends Controller {
             $this->tokenID = base64_encode(mcrypt_create_iv(8));
             $this->issuedAt = time();
             $this->notBefore = $this->issuedAt + 10;  //Adding 10 seconds
-            $this->expire = $this->notBefore + 2592000; // Adding 30 days
+            $this->expire = $this->notBefore + 3600; // Adding 1 hour
 
             $data = [
                 'iat' => $this->issuedAt,
