@@ -1,7 +1,8 @@
 var gulp = require('gulp'),
     sass = require('gulp-sass'),
     browserify = require('gulp-browserify'),
-    browserifyHandlebars = require('browserify-handlebars');
+    browserifyHandlebars = require('browserify-handlebars'),
+    browserifyShim = require('browserify-shim');
 
 /* CONFIG */
 var src = {
@@ -33,7 +34,13 @@ gulp.task('scripts', function () {
 	return gulp.src(src.js)
 	.pipe(browserify({
         insertGlobals: true,
-        transform: [browserifyHandlebars]
+        transform: [browserifyHandlebars],
+        shim: {
+            snapsvg: {
+                path: './node_modules/snapsvg/dist/snap.svg-min.js',
+                exports: 'Snap'
+            }
+        }
 	}))
 	.pipe(gulp.dest(dist.js));
 });

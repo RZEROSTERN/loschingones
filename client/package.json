@@ -17,17 +17,19 @@
   },
   "homepage": "https://github.com/RZEROSTERN/loschingones#readme",
   "devDependencies": {
+    "browserify-shim": "^3.8.12",
     "gulp": "^3.9.1",
     "gulp-browserify": "^0.5.1",
+    "browserify-handlebars": "^1.0.0",
     "gulp-sass": "^2.2.0"
   },
   "dependencies": {
     "backbone": "^1.2.3",
     "backbone.marionette": "^2.4.4",
     "backbone.service": "^0.5.2",
-    "browserify-handlebars": "^1.0.0",
     "handlebars": "^4.0.5",
     "jquery": "^2.2.0",
-    "md5": "^2.0.0"
+    "md5": "^2.0.0",
+    "snapsvg": "^0.4.0"
   }
 }
