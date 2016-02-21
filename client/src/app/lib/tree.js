@@ -8,30 +8,22 @@ var Tree = {
 	},
 	taskStackElement:function(snap,group,xOffset,yOffset,elNumber,width,height){
 		var r = snap.rect(xOffset,yOffset - (elNumber * 70),width,height);
-		r.drag(function(){
+		r.drag(function(dx,dy){
 			//on move
-			console.log("IN DRAG",this,x,y);
-			this.x = x;
-			this.y = y;
+			this.attr({
+			transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [dx, dy]
+        	});
 		},function(x,y){
-			//on start
-			console.log("START DRAG",this,x,y);
+			this.data('origTransform', this.transform().local );
+		},function(){
+			this.attr({
+				transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [0, 0]
+        	});
 		});
 		group.add(r);
 	},
 	start:function(el){
 		var s = Snap("#svg");
-		// Lets create big circle in the middle:
-		var bigCircle = s.circle(150, 150, 100);
-		// By default its black, lets change its attributes
-		bigCircle.attr({
-		    fill: "#bada55",
-		    stroke: "#000",
-		    strokeWidth: 5
-		});
-		bigCircle.hover(function(){
-			console.log("jklj");
-		});
 		//mockup
 		var stack = s.group();
 		Tree.taskStackElement(s,stack,20,$(el).height() - 80,0,200,50);
