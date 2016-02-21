@@ -15,8 +15,17 @@ use yii\filters\Cors;
 use yii\helpers\ArrayHelper;
 use yii\web\Request;
 use Doctrine\CouchDB\CouchDBClient;
+use Firebase\JWT\JWT;
 
 class DocumentsController extends Controller {
+    private $tokenID;
+    private $issuedAt;
+    private $notBefore;
+    private $expire;
+    private $secretKey;
+    private $algorithm;
+    private $jwt;
+
     public function actions()
     {
         return [
@@ -50,13 +59,68 @@ class DocumentsController extends Controller {
     /**
      * COUCHDB METHODS
      */
-    public function actionNewDocument(){
+    public function actionNewDocument($id){
         $client = CouchDBClient::create(array('dbname' => 'plantree'));
 
         $client->getDatabase();
         $result = $client->postDocument(array('ip' => $_SERVER['REMOTE_ADDR'], 'ts' => time()));
 
-        echo json_encode(array('id' => $result[0], 'rev' => $result[1]));
+        $this->tokenID = base64_encode(mcrypt_create_iv(8));
+        $this->issuedAt = time();
+        $this->notBefore  = $this->issuedAt + 10;  //Adding 10 seconds
+        $this->expire     = $this->notBefore + 3600; // Adding 3600 seconds
+
+        $data = [
+            'iat' => $this->issuedAt,
+            'jti' => $this->tokenID,
+            'iss' => 'loschingones',
+            'nbf' => $this->notBefore,
+            'exp' => $this->expire,
+            'data' => [
+                'userId' => $id,
+                'couchuid' => $result[0],
+            ],
+        ];
+
+        header('Content-type: application/json');
+
+        $this->secretKey = 'JWT-CHINGON';
+        $this->algorithm = 'HS256';
+
+        $this->jwt = JWT::encode($data, $this->secretKey, $this->algorithm);
+
+        $unencodedArray = [
+            'jwt' => $this->jwt,
+            'couchrev' => $result[1],
+        ];
+
+        echo json_encode($unencodedArray);
+    }
+
+    public function actionSaveDataToDocument(){
+        if($this->request->isPost){
+            $auth = filter_input(INPUT_POST, 'auth', FILTER_SANITIZE_STRING);
+            $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_STRING);
+            $rev = filter_input(INPUT_POST, 'rev', FILTER_SANITIZE_STRING);
+            $data = filter_input(INPUT_POST, 'data');
+
+            $decodedJWT = JWT::decode($auth, 'JWT-CHINGON', ['HS256']);
+
+            if($decodedJWT->data->userId === $id) {
+                $client = CouchDBClient::create(array('dbname' => 'plantree'));
+                $client->getDatabase();
+                $result = $client->putDocument(json_decode($data, true), $decodedJWT->data->couchuid, $rev);
+
+                if($result) {
+                    echo json_encode(['rev' => $result[1]]);
+                }
+            } else {
+                header("HTTP/1.0 401 Unauthorized");
+                exit();
+            }
+        } else {
+            header("HTTP/1.0 405 Method not Allowed");
+        }
     }
 
     public function actionGatherExistingDocument($id) {
