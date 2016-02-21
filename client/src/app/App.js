@@ -1,5 +1,4 @@
-var _ = require('underscore'),
-    Backbone = require('backbone'),
+var Backbone = require('backbone'),
     Marionette = require('backbone.marionette'),
     MainLayout = require('./views/MainLayout'),
     routers = require('./routers');
