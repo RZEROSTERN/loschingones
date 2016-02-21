@@ -1,4 +1,5 @@
 var Marionette = require('backbone.marionette'),
+    SessionService = require('../services/session'),
     copyLinkTemplate = require('../templates/copyLink.handlebars');
 
 var CopyLinkView = Marionette.ItemView.extend({

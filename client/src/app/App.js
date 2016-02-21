@@ -5,14 +5,14 @@ var Backbone = require('backbone'),
 
 var App = Marionette.Application.extend({
     initialize: function (opts) {
-        // Render main layout
-        this.mainLayoutView = new MainLayout();
-        this.mainLayoutView.render();
-        // Initialize submodules, routers, etc
-        this.routers = {
-            main: new routers.MainRouter()
-        };
         this.on('start', function () {
+            // Render main layout
+            this.mainLayoutView = new MainLayout();
+            this.mainLayoutView.render();
+            // Initialize submodules, routers, etc
+            this.routers = {
+                main: new routers.MainRouter()
+            };
             // Start history
             if (Backbone.history) Backbone.history.start();
         });

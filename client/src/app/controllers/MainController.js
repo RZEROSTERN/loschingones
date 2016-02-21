@@ -5,7 +5,7 @@ module.exports = {
     SessionService.request('newSession').then(function (newUid) {
       // Require App here because object is not ready on
       // module definition.
-      var App = require('../App')
+      var App = require('../App');
       App.routers.main.navigate('tree/' + newUid, true);
     });
   },
