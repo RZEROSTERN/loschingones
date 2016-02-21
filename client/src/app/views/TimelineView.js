@@ -8,9 +8,18 @@ var TimelineView = Marionette.LayoutView.extend({
     	'tree': '#tree',
     	'svg': '#svg'
   	},
-  	onRender: function () {
-  		console.log("HELLO WORLD");
+    /*onRender: function(){
+      console.log("HELLO WORLD onRender");
       TreeLib.start(this.svg.el);
-  	}
+
+    },*/
+  	/*onAttach: function () {
+  		console.log("HELLO WORLD ATTACH");
+      TreeLib.start(this.svg.el);
+  	},*/
+    onShow: function () {
+      console.log("HELLO onShow");
+      TreeLib.start(this.svg.el);
+    }
 });
 module.exports = TimelineView;
