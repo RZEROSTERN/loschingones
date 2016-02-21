@@ -2,6 +2,14 @@ var SessionService = require('../services/session');
 
 module.exports = {
   index: function () {
-    console.log('Route to new session.');
+    SessionService.request('newSession').then(function (newUid) {
+      // Require App here because object is not ready on
+      // module definition.
+      var App = require('../App')
+      App.routers.main.navigate('tree/' + newUid, true);
+    });
+  },
+  viewTree: function (uid) {
+    console.log('viewTree', uid);
   }
 };

@@ -22,6 +22,7 @@ var SessionService = Service.extend({
     newSession: function () {
         this.uid = md5(navigator.userAgent + now());
         this.data = {};
+        return this.uid;
     },
 
     getUid: function () {

@@ -4,7 +4,8 @@ var Marionette = require('backbone.marionette'),
 var MainRouter = Marionette.AppRouter.extend({
   controller: Controller,
   appRoutes: {
-    '': 'index'
+    '': 'index',
+    'tree/:uid': 'viewTree'
   }
 });
 
