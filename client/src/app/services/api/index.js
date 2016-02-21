@@ -35,29 +35,27 @@ var APIService = Service.extend({
         }
         return $.ajax({
             url: config.apiurl + '/?r=documents/save-data-to-document',
-            type: 'POST',
-            data: JSON.stringify({
+            type: 'GET',
+            data: {
                 auth: token,
                 id: uid,
                 rev: rev,
-                data: tree
-            }),
+                data: JSON.stringify(tree)
+            },
             dataType: 'json'
         });
     },
     
-    loadTree: function (uid, token) {
+    loadTree: function (uid) {
         if (config.apiurl === 'mockup') {
             return new Promise(function (resolve, reject) {
                 if (uid === '000000' ) reject('Generic error');
-                if (uid !== '000000' && token !== '1234567890abcdef') reject('Error 401. Not authorized');
                 resolve({ status: 'ok' });
             });
         }
         return $.ajax({
-            url: config.apiurl + '/',
+            url: config.apiurl + '/r=documents/gather-existing-document&id=' + uid,
             type: 'GET',
-            data: {},
             dataType: 'json'
         });
     },

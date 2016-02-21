@@ -10,6 +10,12 @@ module.exports = {
     });
   },
   viewTree: function (uid) {
-    console.log('viewTree', uid);
+    /*console.log('viewTree', uid);
+    setTimeout(function () {
+      console.log(SessionService);
+      SessionService.request('loadTree', uid).then(function (data) {
+        console.log('Trigger event for view to render', data);
+      });
+    }, 1000);*/
   }
 };

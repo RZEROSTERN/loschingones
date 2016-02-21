@@ -13,12 +13,12 @@ var SessionService = Service.extend({
     
     requests: {
         'newSession': 'newSession',
+        'resumeSession': 'resumeSession',
         'set': 'set',
         'get': 'get',
         'del': 'del',
         'has': 'has',
-        'save': 'save',
-        'load': 'load'
+        'save': 'save'
     },
     
     newSession: function () {
@@ -26,6 +26,17 @@ var SessionService = Service.extend({
         this.data = {};
         console.log('uid set', this);
         return this.uid;
+    },
+
+    resumeSession: function (uid) {
+        this.uid = uid;
+        this.token = 'TODO-GET';
+        this.rev = 'TODO-GET';
+        return APIService.request('loadTree', this.uid).then(function (data) {
+            this.data = data;
+        }).catch(function (err) {
+            console.error('Load tree:', err);
+        });
     },
 
     getUid: function () {
@@ -64,19 +75,14 @@ var SessionService = Service.extend({
         if (this.canBeSynced()) {
             return APIService.request('saveTree', this.uid, this.token, this.rev, this.get('tree', {}));
         }
-        console.log(this);
         APIService.request('getToken', this.uid).then(function (res) {
             this.token = res.jwt;
             this.rev = res.couchrev;
             return APIService.request('saveTree', this.uid, this.token, this.rev, this.get('tree', {}));
         }.bind(this)).catch(function (err) {
             // Handle error
-            console.error('Save:', err);
+            console.error('Save tree:', err);
         });
-    },
-    
-    load: function () {
-        // Load from server
     }
     
 });
