@@ -59,42 +59,48 @@ class DocumentsController extends Controller {
     /**
      * COUCHDB METHODS
      */
-    public function actionNewDocument($id){
-        $client = CouchDBClient::create(array('dbname' => 'plantree'));
+    public function actionNewDocument(){
+        if($this->request->isPost) {
+            $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_STRING);
 
-        $client->getDatabase();
-        $result = $client->postDocument(array('ip' => $_SERVER['REMOTE_ADDR'], 'ts' => time()));
+            $client = CouchDBClient::create(array('dbname' => 'plantree'));
 
-        $this->tokenID = base64_encode(mcrypt_create_iv(8));
-        $this->issuedAt = time();
-        $this->notBefore  = $this->issuedAt + 10;  //Adding 10 seconds
-        $this->expire     = $this->notBefore + 3600; // Adding 3600 seconds
+            $client->getDatabase();
+            $result = $client->postDocument(array('ip' => $_SERVER['REMOTE_ADDR'], 'ts' => time()));
 
-        $data = [
-            'iat' => $this->issuedAt,
-            'jti' => $this->tokenID,
-            'iss' => 'loschingones',
-            'nbf' => $this->notBefore,
-            'exp' => $this->expire,
-            'data' => [
-                'userId' => $id,
-                'couchuid' => $result[0],
-            ],
-        ];
+            $this->tokenID = base64_encode(mcrypt_create_iv(8));
+            $this->issuedAt = time();
+            $this->notBefore = $this->issuedAt + 10;  //Adding 10 seconds
+            $this->expire = $this->notBefore + 2592000; // Adding 30 days
 
-        header('Content-type: application/json');
+            $data = [
+                'iat' => $this->issuedAt,
+                'jti' => $this->tokenID,
+                'iss' => 'loschingones',
+                'nbf' => $this->notBefore,
+                'exp' => $this->expire,
+                'data' => [
+                    'userId' => $id,
+                    'couchuid' => $result[0],
+                ],
+            ];
 
-        $this->secretKey = 'JWT-CHINGON';
-        $this->algorithm = 'HS256';
+            header('Content-type: application/json');
 
-        $this->jwt = JWT::encode($data, $this->secretKey, $this->algorithm);
+            $this->secretKey = 'JWT-CHINGON';
+            $this->algorithm = 'HS256';
 
-        $unencodedArray = [
-            'jwt' => $this->jwt,
-            'couchrev' => $result[1],
-        ];
+            $this->jwt = JWT::encode($data, $this->secretKey, $this->algorithm);
 
-        echo json_encode($unencodedArray);
+            $unencodedArray = [
+                'jwt' => $this->jwt,
+                'couchrev' => $result[1],
+            ];
+
+            echo json_encode($unencodedArray);
+        } else {
+            header("HTTP/1.0 405 Method not Allowed");
+        }
     }
 
     public function actionSaveDataToDocument(){
