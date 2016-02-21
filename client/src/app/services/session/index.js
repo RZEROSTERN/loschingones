@@ -65,7 +65,7 @@ var SessionService = Service.extend({
         APIService.request('getToken', this.uid).then(function (res) {
             this.token = res.token;
             return APIService.request('saveTree', this.uid, this.token, this.get('tree', {}));
-        }).catch(function (err) {
+        }.bind(this)).catch(function (err) {
             // Handle error
             console.error('Save:', err);
         });

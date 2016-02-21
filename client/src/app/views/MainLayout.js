@@ -1,7 +1,8 @@
 var Marionette = require('backbone.marionette'),
     layoutTemplate = require('../templates/layout.handlebars'),
     TimelineView = require("./TimelineView"),
-    CopyLinkView = require('./CopyLinkView');
+    CopyLinkView = require('./CopyLinkView'),
+    SessionService = require('../services/session');
 
 var MainLayout = Marionette.LayoutView.extend({
     el: '#app',
@@ -20,13 +21,21 @@ var MainLayout = Marionette.LayoutView.extend({
     new_click: function (e) {
         e.preventDefault();
         console.log('new');
+        if (confirm('Are you sure you want to create a new tasktree? If you haven\'t saved this one, it will be lost forever.')) {
+            SessionService.request('newSession').then(function (newUid) {
+                // Require App here because object is not ready on
+                // module definition.
+                var App = require('../App')
+                App.routers.main.navigate('tree/' + newUid, true);
+            });
+        }
     },
     save_click: function (e) {
         e.preventDefault();
         console.log('save');
-        // DO NOT USE THIS
-        var s = require('../services/session');
-        s.request('save');
+        // In a perfect world, this would be on a
+        // controller or a listener, not on the view.
+        SessionService.request('save');
     },
 
     onRender: function () {
