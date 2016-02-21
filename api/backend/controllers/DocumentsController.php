@@ -19,14 +19,42 @@ class DocumentsController extends Controller {
             'error' => [
                 'class' => 'yii\web\ErrorAction',
             ],
-        ]; 
+        ];
     }
 
-    public function actionIndex() {
-        //Init curl
-        $curl = new Curl();
+    public function behaviors() {
+        return ArrayHelper::merge([
+            [
+                'class' => Cors::className(),
+                'cors' => [
+                    'Origin' => ['*'],
+                    'Access-Control-Allow-Origin' => ['*'],
+                    'Access-Control-Allow-Credentials' => true,
+                    'Access-Control-Allow-Headers' => ['*'],
+                    'Access-Control-Request-Headers' => ['*'],
+                    'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'DELETE'],
+                ],
+            ],
+        ], parent::behaviors());
+    }
 
-        //get http://example.com/
+    public function beforeAction($action) {
+        $this->enableCsrfValidation = false;
+        return parent::beforeAction($action);
+    }
+
+    /**
+     * COUCHDB METHODS
+     */
+    public function actionNewDocument(){
+        $curl = new Curl();
+    }
+
+    /**
+     * TEST METHODS
+     */
+    public function actionTestGetMethod() {
+        $curl = new Curl();
         $response = $curl->get('http://example.com/');
     }
 } 
