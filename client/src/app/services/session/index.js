@@ -18,6 +18,7 @@ var SessionService = Service.extend({
         'resumeSession': 'resumeSession',
         'setUid': 'setUid',
         'getUid': 'getUid',
+        'getTree': 'getTree',
         'set': 'set',
         'get': 'get',
         'del': 'del',
@@ -55,6 +56,7 @@ var SessionService = Service.extend({
         this._sessionFromLocal(uid);
         return APIService.request('loadTree', this.uid).then(function (data) {
             this.data = { tree: data };
+            this.trigger('setData', this.data);
             return data;
         });
     },
@@ -66,6 +68,10 @@ var SessionService = Service.extend({
     setUid: function (uid) {
         this.uid = uid;
         this.trigger('setUid', uid);
+    },
+    
+    getTree: function () {
+        return this.get('tree', {});
     },
     
     set: function (key, data) {

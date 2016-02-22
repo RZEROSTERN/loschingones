@@ -16,6 +16,10 @@ var App = Marionette.Application.extend({
             // Start history
             if (Backbone.history) Backbone.history.start();
         });
+    },
+    showModal: function () {
+        var ModalService = require('./services/modal');
+        ModalService.request('show');
     }
 });
 
