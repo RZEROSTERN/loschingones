@@ -3,7 +3,8 @@ var $ = require("jquery");
 var Tree = {
 	SVGRef:{
 		snap: null,
-		tl: null
+		tl: null,
+		linker: null
 	},
 	taskStackStyle:{
 		   fill: "#bada55",
@@ -25,14 +26,26 @@ var Tree = {
 		g.drag(function(dx,dy){
 			//on move
 			this.attr({
-			transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [dx, dy]
+			transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [dx, dy],
         	});
+        	this.data("dxx",dx);
+        	this.data("dyy",dy);
 		},function(x,y){
 			this.data('origTransform', this.transform().local );
 		},function(){
+			var fPos = this.data("dxx");
+			if(fPos >= 80){
+				var oo = Math.floor(fPos / 45) - 5;
+				var pppos = 255 + 45 * oo;
+				this.attr({
+					transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [pppos, this.data("dyy")]
+        		});
+
+			}else{
 			this.attr({
 				transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [0, 0]
         	});
+			}
 		});
 		group.add(g);
 	},
@@ -47,20 +60,17 @@ var Tree = {
 		Tree.SVGRef.tl = s.group();
 		var tl = s.group();
 		var markers = s.group();
-		tl.add(s.rect(250,20,1100,20));
+		tl.add(s.rect(100,20,1100,20));
 		for(var i = 0; i < 24; i++){
-			var flag = s.rect(255 + (45 * i),10,10,60).attr(Tree.flagStyle); 
+			var flag = s.rect(100 + (45 * i),10,10,60).attr(Tree.flagStyle); 
 			flag.data("index",i);
 			flag.hover(function(){
 				//console.log(this.data("index"));
 			});
-			flag.click(function(){
-				flagCallback(this.data("index"));
-			});
 			markers.add(flag);	
 		}
 		tl.add(markers);
-		tl.drag(function(dx,dy){
+		/*tl.drag(function(dx,dy){
 			//on move
 			this.attr({
 			transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [dx, 0]
@@ -70,8 +80,9 @@ var Tree = {
 		},function(){
 			/*this.attr({
 				transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [0, 0]
-        	});*/
-		});
+        	});
+		});*/
+		console.log(tl);
 		
 	}
 }
