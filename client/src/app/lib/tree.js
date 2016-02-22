@@ -34,6 +34,20 @@ var Tree = {
 		Tree.taskStackElement(s,stack,20,$(el).height() - 80,0,200,50);
 		Tree.taskStackElement(s,stack,20,$(el).height() - 80,1,200,50);
 		Tree.taskStackElement(s,stack,20,$(el).height() - 80,2,200,50);
+
+		s.rect(250,20,900,20);
+		
+		s.rect(250,60,15,20);
+		s.rect(255,10,5,60).attr({fill:"#ffff00"});
+		s.rect(265,60,15,20);
+		s.rect(270,10,5,60).attr({fill:"#ffff00"});
+		s.rect(280,60,15,20);
+		s.rect(285,10,5,60).attr({fill:"#ffff00"});
+		s.rect(295,60,15,20);
+		s.rect(300,10,5,60).attr({fill:"#ffff00"});
+		
+
+		
 	}
 }
 module.exports = Tree;
