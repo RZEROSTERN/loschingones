@@ -1,10 +1,19 @@
 var Snap = require("snapsvg");
 var $ = require("jquery");
 var Tree = {
+	SVGRef:{
+		snap: null,
+		tl: null
+	},
 	taskStackStyle:{
 		   fill: "#bada55",
 		    stroke: "#000",
 		    strokeWidth: 5
+	},
+	flagStyle:{
+		   fill: "#bada55",
+		    stroke: "#000",
+		    strokeWidth: 1
 	},
 	taskStackElement:function(snap,group,xOffset,yOffset,elNumber,width,height,legend){
 		var leg = (legend) ? legend: "Test";
@@ -27,26 +36,42 @@ var Tree = {
 		});
 		group.add(g);
 	},
-	start:function(el){
-		var s = Snap("#svg");
+	start:function(el,flagCallback){
+		Tree.SVGRef.snap = Snap("#svg");
+		var s = Tree.SVGRef.snap;
 		//mockup
 		var stack = s.group();
 		Tree.taskStackElement(s,stack,20,$(el).height() - 80,0,200,50);
 		Tree.taskStackElement(s,stack,20,$(el).height() - 80,1,200,50);
 		Tree.taskStackElement(s,stack,20,$(el).height() - 80,2,200,50);
-
-		s.rect(250,20,900,20);
-		
-		s.rect(250,60,15,20);
-		s.rect(255,10,5,60).attr({fill:"#ffff00"});
-		s.rect(265,60,15,20);
-		s.rect(270,10,5,60).attr({fill:"#ffff00"});
-		s.rect(280,60,15,20);
-		s.rect(285,10,5,60).attr({fill:"#ffff00"});
-		s.rect(295,60,15,20);
-		s.rect(300,10,5,60).attr({fill:"#ffff00"});
-		
-
+		Tree.SVGRef.tl = s.group();
+		var tl = s.group();
+		var markers = s.group();
+		tl.add(s.rect(250,20,1100,20));
+		for(var i = 0; i < 24; i++){
+			var flag = s.rect(255 + (45 * i),10,10,60).attr(Tree.flagStyle); 
+			flag.data("index",i);
+			flag.hover(function(){
+				//console.log(this.data("index"));
+			});
+			flag.click(function(){
+				flagCallback(this.data("index"));
+			});
+			markers.add(flag);	
+		}
+		tl.add(markers);
+		tl.drag(function(dx,dy){
+			//on move
+			this.attr({
+			transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [dx, 0]
+        	});
+		},function(x,y){
+			this.data('origTransform', this.transform().local );
+		},function(){
+			/*this.attr({
+				transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [0, 0]
+        	});*/
+		});
 		
 	}
 }
