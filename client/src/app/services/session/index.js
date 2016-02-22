@@ -1,3 +1,4 @@
+
 var Service = require('backbone.service'),
     APIService = require('../api'),
     md5 = require('md5'),
@@ -25,14 +26,19 @@ var SessionService = Service.extend({
     },
 
     _sessionToLocal: function (uid) {
+        // Don't save not saved sessions
+        if (this.token === null || this.rev === null) return;
         localStorage.set('ses-' + uid, this.token + '|' + this.rev);
     },
 
     _sessionFromLocal: function (uid) {
         var data = localStorage.get('ses-' + uid);
-        var arr = data.split('|');
-        this.token = arr[0];
-        this.rev = arr[1];
+        if (data !== null) {
+            // Not anon
+            var arr = data.split('|');
+            this.token = arr[0];
+            this.rev = arr[1];
+        }
     },
     
     newSession: function () {
