@@ -42,7 +42,7 @@ var SessionService = Service.extend({
     },
     
     newSession: function () {
-        this.uid = md5(navigator.userAgent + now());
+        this.setUid(md5(navigator.userAgent + now()));
         this.token = null;
         this.rev = null;
         this._sessionToLocal(this.uid);
@@ -51,14 +51,11 @@ var SessionService = Service.extend({
     },
 
     resumeSession: function (uid) {
-        this.uid = uid;
+        this.setUid(uid);
         this._sessionFromLocal(uid);
         return APIService.request('loadTree', this.uid).then(function (data) {
-            this.data = data;
+            this.data = { tree: data };
             return data;
-        }).catch(function (err) {
-            console.error('Load tree:', err);
-            return err;
         });
     },
 
@@ -68,6 +65,7 @@ var SessionService = Service.extend({
 
     setUid: function (uid) {
         this.uid = uid;
+        this.trigger('setUid', uid);
     },
     
     set: function (key, data) {
@@ -116,10 +114,7 @@ var SessionService = Service.extend({
                 this._sessionToLocal(this.uid);
                 return rres;
             }.bind(this));
-        }.bind(this)).catch(function (err) {
-            // Handle error
-            console.error('Save tree:', err);
-        });
+        }.bind(this));
     }
     
 });

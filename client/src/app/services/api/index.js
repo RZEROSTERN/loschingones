@@ -27,7 +27,6 @@ var APIService = Service.extend({
     },
     
     saveTree: function (uid, token, rev, tree) {
-        console.log('saveTree', arguments);
         if (config.apiurl === 'mockup') {
             return new Promise(function (resolve, reject) {
                 if (uid === '000000' ) reject('Generic error');
@@ -57,7 +56,7 @@ var APIService = Service.extend({
             });
         }
         return $.ajax({
-            url: config.apiurl + '/r=documents/gather-existing-document&id=' + uid,
+            url: config.apiurl + '/?r=documents/gather-existing-document&id=' + uid,
             type: 'GET',
             dataType: 'json'
         });
