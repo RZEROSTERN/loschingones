@@ -19,7 +19,7 @@ class UIDDesignDocument implements \Doctrine\CouchDB\View\DesignDocument
                 'by_uid' => array(
                     'map' => 'function(doc) {
                         if(\'document\' == doc.type) {
-                            emit(doc.uid, doc._id, doc.ip, doc.ts);
+                            emit(doc.uid, doc._id, doc.ip, doc.ts, doc.tree);
                         }
                     }',
                     'reduce' => '_count'

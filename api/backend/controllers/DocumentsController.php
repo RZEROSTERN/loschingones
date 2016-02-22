@@ -66,13 +66,16 @@ class DocumentsController extends Controller {
 
             $client = CouchDBClient::create(array('dbname' => 'plantree'));
 
-            $client->getDatabase();
-            $result = $client->postDocument([
+            $sourceData = [
                 'type' => 'document',
                 'ip' => $_SERVER['REMOTE_ADDR'],
                 'ts' => time(),
                 'uid' => $id,
-            ]);
+                'tree' => 'empty',
+            ];
+
+            $client->getDatabase();
+            $result = $client->postDocument($sourceData);
 
             $this->tokenID = base64_encode(mcrypt_create_iv(8));
             $this->issuedAt = time();
@@ -115,14 +118,25 @@ class DocumentsController extends Controller {
             $auth = filter_input(INPUT_POST, 'auth', FILTER_SANITIZE_STRING);
             $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_STRING);
             $rev = filter_input(INPUT_POST, 'rev', FILTER_SANITIZE_STRING);
-            $data = filter_input(INPUT_POST, 'data');
+            $data = $_POST['data'];
+
+            $sourceData = json_decode($this->actionGatherExistingDocument($id, true), true);
+            $newTree = json_decode($data, true);
+
+            if($sourceData['tree'] == 'empty'){
+                $sourceData['tree'] = $newTree;
+            } else {
+                foreach($newTree as $key=>$value){
+                    $sourceData['tree'][$key] = $value;
+                }
+            }
 
             $decodedJWT = JWT::decode($auth, 'JWT-CHINGON', ['HS256']);
 
             if($decodedJWT->data->userId == $id) {
                 $client = CouchDBClient::create(array('dbname' => 'plantree'));
                 $client->getDatabase();
-                $result = $client->putDocument(json_decode($data, true), $decodedJWT->data->couchuid, $rev);
+                $result = $client->putDocument($sourceData, $decodedJWT->data->couchuid, $rev);
 
                 if($result) {
                     echo json_encode(['rev' => $result[1]]);
@@ -136,7 +150,7 @@ class DocumentsController extends Controller {
         }
     }
 
-    public function actionGatherExistingDocument($id) {
+    public function actionGatherExistingDocument($id, $fromBE = false) {
         $results = [];
         $client = CouchDBClient::create(array('dbname' => 'plantree'));
 
@@ -150,12 +164,14 @@ class DocumentsController extends Controller {
         $query->setIncludeDocs(true);
         $result = $query->execute();
 
-
         foreach($result as $res) {
             array_push($results, $res['doc']);
         }
 
-        echo json_encode($results);
+        if(!$fromBE)
+            echo json_encode($results);
+        else
+            return json_encode($results[0]);
     }
 
     /**
