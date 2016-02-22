@@ -12,9 +12,12 @@ module.exports = {
   viewTree: function (uid) {
     console.log('viewTree', uid);
     SessionService.request('setUid', uid).then(function () {
-      console.log('fooo');
       return SessionService.request('resumeSession', uid).then(function (data) {
         console.log('Trigger event for view to render', data);
+        return data;
+      })
+      .catch(function (err) {
+        console.error('viewTree error: ya mamó', err);
       });
     });
   }

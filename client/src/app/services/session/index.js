@@ -1,7 +1,8 @@
 var Service = require('backbone.service'),
     APIService = require('../api'),
     md5 = require('md5'),
-    now = require('../../utils').now;
+    now = require('../../utils').now,
+    localStorage = require('../../utils').localStorage;
 
 var SessionService = Service.extend({
     start: function () {
@@ -22,24 +23,36 @@ var SessionService = Service.extend({
         'has': 'has',
         'save': 'save'
     },
+
+    _sessionToLocal: function (uid) {
+        localStorage.set('ses-' + uid, this.token + '|' + this.rev);
+    },
+
+    _sessionFromLocal: function (uid) {
+        var data = localStorage.get('ses-' + uid);
+        var arr = data.split('|');
+        this.token = arr[0];
+        this.rev = arr[1];
+    },
     
     newSession: function () {
         this.uid = md5(navigator.userAgent + now());
         this.token = null;
         this.rev = null;
+        this._sessionToLocal(this.uid);
         this.data = {};
-        console.log('uid set', this);
         return this.uid;
     },
 
     resumeSession: function (uid) {
         this.uid = uid;
-        this.token = 'TODO-GET';
-        this.rev = 'TODO-GET';
+        this._sessionFromLocal(uid);
         return APIService.request('loadTree', this.uid).then(function (data) {
             this.data = data;
+            return data;
         }).catch(function (err) {
             console.error('Load tree:', err);
+            return err;
         });
     },
 
@@ -84,6 +97,7 @@ var SessionService = Service.extend({
             return APIService.request('saveTree', this.uid, this.token, this.rev, this.get('tree', {}))
             .then(function (rres) {
                 this.rev = rres.rev;
+                this._sessionToLocal(this.uid);
                 return rres;
             }.bind(this));
         }
@@ -93,6 +107,7 @@ var SessionService = Service.extend({
             return APIService.request('saveTree', this.uid, this.token, this.rev, this.get('tree', {}))
             .then(function (rres) {
                 this.rev = rres.rev;
+                this._sessionToLocal(this.uid);
                 return rres;
             }.bind(this));
         }.bind(this)).catch(function (err) {

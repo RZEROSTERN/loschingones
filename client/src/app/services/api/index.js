@@ -27,7 +27,7 @@ var APIService = Service.extend({
     },
     
     saveTree: function (uid, token, rev, tree) {
-        console.log('saveTree', rev);
+        console.log('saveTree', arguments);
         if (config.apiurl === 'mockup') {
             return new Promise(function (resolve, reject) {
                 if (uid === '000000' ) reject('Generic error');
