@@ -14,6 +14,8 @@ var SessionService = Service.extend({
     requests: {
         'newSession': 'newSession',
         'resumeSession': 'resumeSession',
+        'setUid': 'setUid',
+        'getUid': 'getUid',
         'set': 'set',
         'get': 'get',
         'del': 'del',
@@ -44,6 +46,10 @@ var SessionService = Service.extend({
     getUid: function () {
         return this.uid;
     },
+
+    setUid: function (uid) {
+        this.uid = uid;
+    },
     
     set: function (key, data) {
         this.data[key] = data;
@@ -73,12 +79,10 @@ var SessionService = Service.extend({
     },
     
     save: function () {
-        console.log('save', this.rev);
         // Sync to server
         if (this.canBeSynced()) {
             return APIService.request('saveTree', this.uid, this.token, this.rev, this.get('tree', {}))
             .then(function (rres) {
-                console.log('save new rev', rres.rev);
                 this.rev = rres.rev;
                 return rres;
             }.bind(this));
@@ -88,7 +92,6 @@ var SessionService = Service.extend({
             this.rev = res.couchrev;
             return APIService.request('saveTree', this.uid, this.token, this.rev, this.get('tree', {}))
             .then(function (rres) {
-                console.log('save new rev', rres.rev);
                 this.rev = rres.rev;
                 return rres;
             }.bind(this));
