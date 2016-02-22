@@ -8,6 +8,7 @@
 
 namespace backend\controllers;
 
+use backend\models\UIDDesignDocument;
 use Yii;
 use linslin\yii2\curl\Curl;
 use yii\web\Controller;
@@ -66,7 +67,12 @@ class DocumentsController extends Controller {
             $client = CouchDBClient::create(array('dbname' => 'plantree'));
 
             $client->getDatabase();
-            $result = $client->postDocument(array('ip' => $_SERVER['REMOTE_ADDR'], 'ts' => time(), 'uid' => $id));
+            $result = $client->postDocument([
+                'type' => 'document',
+                'ip' => $_SERVER['REMOTE_ADDR'],
+                'ts' => time(),
+                'uid' => $id,
+            ]);
 
             $this->tokenID = base64_encode(mcrypt_create_iv(8));
             $this->issuedAt = time();
@@ -130,13 +136,26 @@ class DocumentsController extends Controller {
         }
     }
 
-    public function actionGatherExistingDocument($uid) {
+    public function actionGatherExistingDocument($id) {
+        $results = [];
         $client = CouchDBClient::create(array('dbname' => 'plantree'));
 
         $client->getDatabase();
-        $doc = $client->findDocuments(array('uid'=>$uid));
 
-        echo json_encode($doc->body);
+        $client->createDesignDocument('uids', new UIDDesignDocument());
+
+        $query = $client->createViewQuery('uids', 'by_uid');
+        $query->setKey($id);
+        $query->setReduce(false);
+        $query->setIncludeDocs(true);
+        $result = $query->execute();
+
+
+        foreach($result as $res) {
+            array_push($results, $res['doc']);
+        }
+
+        echo json_encode($results);
     }
 
     /**
