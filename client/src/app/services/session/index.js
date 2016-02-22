@@ -58,7 +58,7 @@ var SessionService = Service.extend({
             this.data = { tree: data };
             this.trigger('setData', this.data);
             return data;
-        });
+        }.bind(this));
     },
 
     getUid: function () {
