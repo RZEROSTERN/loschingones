@@ -36,6 +36,17 @@
         }
     }
 }
+
+.modal {
+    display: block;
+    position: absolute;
+    width: 280px;
+    background-color: $color-primary;
+    border-radius: 10px;
+    top: 150px;
+    padding: 20px;
+}
+
 #svg{
     width: 60%;
     min-width: 600px;

@@ -17,7 +17,7 @@ module.exports = {
         return data;
       })
       .catch(function (err) {
-        console.error('viewTree error: ya mamó', err);
+        console.error('viewTree error:', err);
       });
     });
   }
