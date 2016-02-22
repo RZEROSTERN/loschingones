@@ -1,6 +1,8 @@
 var Service = require('backbone.service')
     $ = require('jquery'),
-    config = require('../../config');
+    config = {
+        apiurl: "mockup"
+    }
 
 var APIService = Service.extend({
     
