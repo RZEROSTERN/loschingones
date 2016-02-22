@@ -11,8 +11,8 @@ module.exports = {
   },
   viewTree: function (uid) {
     console.log('viewTree', uid);
-    SessionService.request('resumeSession', uid).then(function (data) {
+    /*SessionService.request('resumeSession', uid).then(function (data) {
       console.log('Trigger event for view to render', data);
-    });
+    });*/
   }
 };
