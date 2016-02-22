@@ -19,13 +19,15 @@ var APIService = Service.extend({
             });
         }
         return $.ajax({
-            url: config.apiurl + '/?r=documents/new-document&id=' + uid,
+            url: config.apiurl + '/?r=documents/new-document',
             type: 'POST',
+            data: 'id=' + uid,
             dataType: 'json'
         });
     },
     
     saveTree: function (uid, token, rev, tree) {
+        console.log('saveTree', rev);
         if (config.apiurl === 'mockup') {
             return new Promise(function (resolve, reject) {
                 if (uid === '000000' ) reject('Generic error');

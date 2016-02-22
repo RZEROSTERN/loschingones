@@ -73,14 +73,25 @@ var SessionService = Service.extend({
     },
     
     save: function () {
+        console.log('save', this.rev);
         // Sync to server
         if (this.canBeSynced()) {
-            return APIService.request('saveTree', this.uid, this.token, this.rev, this.get('tree', {}));
+            return APIService.request('saveTree', this.uid, this.token, this.rev, this.get('tree', {}))
+            .then(function (rres) {
+                console.log('save new rev', rres.rev);
+                this.rev = rres.rev;
+                return rres;
+            }.bind(this));
         }
         APIService.request('getToken', this.uid).then(function (res) {
             this.token = res.jwt;
             this.rev = res.couchrev;
-            return APIService.request('saveTree', this.uid, this.token, this.rev, this.get('tree', {}));
+            return APIService.request('saveTree', this.uid, this.token, this.rev, this.get('tree', {}))
+            .then(function (rres) {
+                console.log('save new rev', rres.rev);
+                this.rev = rres.rev;
+                return rres;
+            }.bind(this));
         }.bind(this)).catch(function (err) {
             // Handle error
             console.error('Save tree:', err);
