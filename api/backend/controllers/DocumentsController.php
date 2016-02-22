@@ -66,11 +66,11 @@ class DocumentsController extends Controller {
             $client = CouchDBClient::create(array('dbname' => 'plantree'));
 
             $client->getDatabase();
-            $result = $client->postDocument(array('ip' => $_SERVER['REMOTE_ADDR'], 'ts' => time()));
+            $result = $client->postDocument(array('ip' => $_SERVER['REMOTE_ADDR'], 'ts' => time(), 'uid' => $id));
 
             $this->tokenID = base64_encode(mcrypt_create_iv(8));
             $this->issuedAt = time();
-            $this->notBefore = $this->issuedAt + 10;  //Adding 10 seconds
+            $this->notBefore = $this->issuedAt;  //Adding 10 seconds
             $this->expire = $this->notBefore + 3600; // Adding 1 hour
 
             $data = [
@@ -94,6 +94,7 @@ class DocumentsController extends Controller {
 
             $unencodedArray = [
                 'jwt' => $this->jwt,
+                'couchuid' => $result[0],
                 'couchrev' => $result[1],
             ];
 
@@ -112,7 +113,7 @@ class DocumentsController extends Controller {
 
             $decodedJWT = JWT::decode($auth, 'JWT-CHINGON', ['HS256']);
 
-            if($decodedJWT->data->userId === $id) {
+            if($decodedJWT->data->userId == $id) {
                 $client = CouchDBClient::create(array('dbname' => 'plantree'));
                 $client->getDatabase();
                 $result = $client->putDocument(json_decode($data, true), $decodedJWT->data->couchuid, $rev);
@@ -129,11 +130,11 @@ class DocumentsController extends Controller {
         }
     }
 
-    public function actionGatherExistingDocument($id) {
+    public function actionGatherExistingDocument($uid) {
         $client = CouchDBClient::create(array('dbname' => 'plantree'));
 
         $client->getDatabase();
-        $doc = $client->findDocument($id);
+        $doc = $client->findDocuments(array('uid'=>$uid));
 
         echo json_encode($doc->body);
     }
