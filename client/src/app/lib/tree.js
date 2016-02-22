@@ -16,7 +16,7 @@ var Tree = {
 		    stroke: "#000",
 		    strokeWidth: 1
 	},
-	taskStackElement:function(snap,group,xOffset,yOffset,elNumber,width,height,legend){
+	taskStackElement:function(snap,group,tlgroup,xOffset,yOffset,elNumber,width,height,legend){
 		var leg = (legend) ? legend: "Test";
 		var g = snap.group();
 		var t = snap.text(xOffset + (width/3),yOffset - (elNumber * 70) + height/2,leg);
@@ -40,7 +40,7 @@ var Tree = {
 				this.attr({
 					transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [pppos, this.data("dyy")]
         		});
-
+        		tlgroup.add(g);
 			}else{
 			this.attr({
 				transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [0, 0]
@@ -52,13 +52,13 @@ var Tree = {
 	start:function(el,flagCallback){
 		Tree.SVGRef.snap = Snap("#svg");
 		var s = Tree.SVGRef.snap;
+		Tree.SVGRef.tl = s.group();
+		var tl =  Tree.SVGRef.tl;
 		//mockup
 		var stack = s.group();
-		Tree.taskStackElement(s,stack,20,$(el).height() - 80,0,200,50);
-		Tree.taskStackElement(s,stack,20,$(el).height() - 80,1,200,50);
-		Tree.taskStackElement(s,stack,20,$(el).height() - 80,2,200,50);
-		Tree.SVGRef.tl = s.group();
-		var tl = s.group();
+		Tree.taskStackElement(s,stack,tl,20,$(el).height() - 80,0,200,50);
+		Tree.taskStackElement(s,stack,tl,20,$(el).height() - 80,1,200,50);
+		Tree.taskStackElement(s,stack,tl,20,$(el).height() - 80,2,200,50);
 		var markers = s.group();
 		tl.add(s.rect(100,20,1100,20));
 		for(var i = 0; i < 24; i++){
@@ -70,7 +70,7 @@ var Tree = {
 			markers.add(flag);	
 		}
 		tl.add(markers);
-		/*tl.drag(function(dx,dy){
+		tl.drag(function(dx,dy){
 			//on move
 			this.attr({
 			transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [dx, 0]
@@ -80,8 +80,8 @@ var Tree = {
 		},function(){
 			/*this.attr({
 				transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [0, 0]
-        	});
-		});*/
+        	});*/
+		});
 		console.log(tl);
 		
 	}
